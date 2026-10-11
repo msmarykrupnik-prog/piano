@@ -3,7 +3,7 @@
 <title>Пианино</title>
 <style>
 html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times New Roman',serif;overflow:hidden}
-.app{height:100%;display:flex;flex-direction:column;user-select:none}
+.app{position:relative;height:100%;display:flex;flex-direction:column;user-select:none}
 .pbox{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center}
 .piano{position:relative}
 .pimg{width:100%;height:100%;display:block;cursor:pointer;filter:drop-shadow(0 1.2vmin 1.6vmin rgba(0,0,0,.45));transition:transform .25s}
@@ -42,6 +42,8 @@ html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times
 .b::before{content:"";position:absolute;left:20%;top:3%;width:20%;height:68%;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.02))}
 .b::after{content:"";position:absolute;left:0;right:0;bottom:0;height:15%;border-radius:0 0 .6vmin .6vmin;background:linear-gradient(#3d3d3d,#0f0f0f)}
 .b:active,.b.p{transform:translateY(1.5px) scaleY(.99);filter:brightness(.85)}
+#kbshow{display:none;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:5;background:rgba(25,18,12,.88);color:#ecdfc3;border:1px solid rgba(236,223,195,.4);border-radius:99px;padding:.5em 1.1em;font:inherit;font-size:clamp(10px,2.4vmin,14px);cursor:pointer;white-space:nowrap}
+.app.vopen:not(.open) #kbshow{display:block}
 </style></head><body>
 <div class="app" id="app">
  <div class="pbox" id="pbox"><div class="piano" id="piano">
@@ -53,9 +55,10 @@ html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times
  <div class="kb" id="kb">
   <div class="bar"><span id="cap">нажмите на клавишу</span>
    <button id="mw" class="on">▢ в окошке</button><button id="mf">⛶ на весь экран</button>
-   <button id="stop">закрыть заслонки</button><button id="hide" aria-label="Скрыть клавиатуру">▾</button></div>
+   <button id="stop">закрыть заслонки</button><button id="hide" aria-label="Скрыть клавиатуру" title="Скрыть клавиатуру, видео продолжится">▾ скрыть</button></div>
   <div class="keys"><div class="in" id="keys"></div></div>
  </div>
+ <button id="kbshow" aria-label="Показать клавиатуру">⌨ клавиатура</button>
 </div>
 <script>
 /* ===== ВАШИ ВИДЕО: файлы лежат в папке videos рядом с этим файлом (или полные ссылки на .mp4) ===== */
@@ -98,7 +101,7 @@ let mode='window',pfs=false;
 function setBtn(){$('mw').classList.toggle('on',mode==='window');$('mf').classList.toggle('on',mode==='full')}
 function play(n){const v=VIDEOS[n%VIDEOS.length];$('msg').style.display='none';
  vid.src=v.src;vid.currentTime=0;vid.play().catch(()=>{});$('cap').textContent='▶ '+v.title;
- if(!vwin.classList.contains('open')){vwin.style.visibility='visible';void vwin.offsetWidth;vwin.classList.add('open')}
+ if(!vwin.classList.contains('open')){vwin.style.visibility='visible';void vwin.offsetWidth;vwin.classList.add('open')}app.classList.add('vopen');
  if(mode==='full')enterFS()}
 vid.onerror=()=>{const m=$('msg');m.textContent='файл не найден: '+decodeURIComponent((vid.getAttribute('src')||''));m.style.display='block'};
 vid.onended=()=>{};
@@ -116,11 +119,11 @@ $('mf').onclick=()=>{mode='full';setBtn();if(vwin.classList.contains('open'))ent
 $('xbtn').onclick=()=>{mode='window';setBtn();exitFS()};
 vwin.addEventListener('dblclick',()=>{if(document.fullscreenElement||pfs){mode='window';setBtn();exitFS()}else{mode='full';setBtn();enterFS()}});
 vid.addEventListener('click',()=>{if(!vid.controls)vid.paused?vid.play():vid.pause()});
-function stop(){vid.pause();exitFS();mode='window';setBtn();vwin.classList.remove('open');$('cap').textContent='нажмите на клавишу';
+function stop(){vid.pause();exitFS();mode='window';setBtn();vwin.classList.remove('open');app.classList.remove('vopen');$('cap').textContent='нажмите на клавишу';
  setTimeout(()=>{if(!vwin.classList.contains('open'))vwin.style.visibility='hidden'},950)}
 $('stop').onclick=stop;
 /* открыть / скрыть клавиатуру */
 const open=()=>app.classList.add('open');
 $('pimg').onclick=()=>{if(!app.classList.contains('open'))open()};
-$('hide').onclick=()=>{stop();app.classList.remove('open')};
+$('hide').onclick=()=>app.classList.remove('open');$('kbshow').onclick=open;
 </script></body></html>
