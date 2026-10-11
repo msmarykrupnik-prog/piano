@@ -42,8 +42,6 @@ html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times
 .b::before{content:"";position:absolute;left:20%;top:3%;width:20%;height:68%;border-radius:3px;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.02))}
 .b::after{content:"";position:absolute;left:0;right:0;bottom:0;height:15%;border-radius:0 0 .6vmin .6vmin;background:linear-gradient(#3d3d3d,#0f0f0f)}
 .b:active,.b.p{transform:translateY(1.5px) scaleY(.99);filter:brightness(.85)}
-#kbshow{display:none;position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:5;background:rgba(25,18,12,.88);color:#ecdfc3;border:1px solid rgba(236,223,195,.4);border-radius:99px;padding:.5em 1.1em;font:inherit;font-size:clamp(10px,2.4vmin,14px);cursor:pointer;white-space:nowrap}
-.app.vopen:not(.open) #kbshow{display:block}
 </style></head><body>
 <div class="app" id="app">
  <div class="pbox" id="pbox"><div class="piano" id="piano">
@@ -58,7 +56,6 @@ html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times
    <button id="stop">закрыть заслонки</button><button id="hide" aria-label="Скрыть клавиатуру" title="Скрыть клавиатуру, видео продолжится">▾ скрыть</button></div>
   <div class="keys"><div class="in" id="keys"></div></div>
  </div>
- <button id="kbshow" aria-label="Показать клавиатуру">⌨ клавиатура</button>
 </div>
 <script>
 /* ===== ВАШИ ВИДЕО: файлы лежат в папке videos рядом с этим файлом (или полные ссылки на .mp4) ===== */
@@ -125,5 +122,5 @@ $('stop').onclick=stop;
 /* открыть / скрыть клавиатуру */
 const open=()=>app.classList.add('open');
 $('pimg').onclick=()=>{if(!app.classList.contains('open'))open()};
-$('hide').onclick=()=>app.classList.remove('open');$('kbshow').onclick=open;
+$('hide').onclick=()=>app.classList.remove('open');
 </script></body></html>
